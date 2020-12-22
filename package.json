@@ -1,0 +1,23 @@
+{
+  "name": "robo-cope",
+  "version": "1.0.0",
+  "description": "The Telegram bot that helps you cope with your tasks and maintain the required level of self-control.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sofialapteva/robo-cope.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sofialapteva/robo-cope/issues"
+  },
+  "homepage": "https://github.com/sofialapteva/robo-cope#readme",
+  "dependencies": {
+    "botgram": "^2.2.0"
+  }
+}
