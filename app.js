@@ -1,8 +1,54 @@
-// const express = require('express');
-// const fetch = require('node-fetch')
+// modules//
 const botgram = require("botgram")
 const bot = botgram("1413880732:AAFrI49zsRBI8SlxRpIyRwRUtArTblx7Dao")
 
+const express = require('express');
+const session = require('express-session');
+require('dotenv').config();
+const mongoose = require('mongoose');
+const MongoStore = require('connect-mongo')(session);
+// mongoose
+const uri = process.env.URI || 'mongodb://localhost:27017/robocope';
+mongoose.connect(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+});
+
+// server
+const app = express();
+// middlewares//
+app.set('views', 'views');
+app.set('view engine', 'hbs');
+
+app.use(express.static('public'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(
+  session({
+    store: new MongoStore({
+      mongooseConnection: mongoose.createConnection(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+      }),
+    }),
+    resave: false,
+    saveUninitialized: false,
+    secret: process.env.SECRET || 's2dnkslkf4Nvk2s',
+    cookie: { secure: false },
+  }),
+);
+
+app.use((req, res, next) => {
+  res.locals.userId = req.session?.userId;
+  next();
+});
+
+app.get('/', (req, res) => {
+  res.render('index');
+});
+//-----------------------------------------------
 bot.command("start", "help", (msg, reply) =>
   reply.text('Справка: \nhelp - Список команд РобоКоупа \ntimer - Таймер, пример: "/timer 25 минут" \nremind - Напоминание, пример: "/remind через 1 час начать" \nrounds - Раунды pomodoro, пример: "/rounds 25 5 3" - 25 минут работы, 5 минут отдыха, 3 раунда'))
 
@@ -47,3 +93,7 @@ bot.command("rounds", (msg, reply, next) => {
 
 bot.command((msg, reply) =>
   reply.text("Неправильная команда, сформулируйте запрос правильно (справка - /help)"))
+//-----------------------------------------------
+
+const port = process.env.PORT || 3000;
+app.listen(port);
