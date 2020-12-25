@@ -149,24 +149,25 @@ bot.onText(/\/timer (.+) (.+)/, async (msg, data) => {
       });
       await newTimer.save();
       successCheck(msg, 'Timer', newTimer._id);
-    }, Number(value) * 1000);
+    }, value);
   };
   switch (unit) {
     case 'секунд':
     case 'секунда':
     case 'секунды':
     case 'секунду':
+      timer(time * 1000);
       break;
     case 'минут':
     case 'минута':
     case 'минуты':
     case 'минуту':
-      timer(time * 60);
+      timer(time * 60000);
       break;
     case 'час':
     case 'часов':
     case 'часа':
-      timer(time * 3600);
+      timer(time * 3600000);
       break;
     default:
       bot.sendMessage(msg.chat.id, 'Некорректно указаны единицы времени');
@@ -182,25 +183,25 @@ bot.onText(/\/remind (.*\s)?(\d+) (.*)/, (msg, data) => {
     const task = data.join(' ');
     const reminder = (value) => {
       bot.sendMessage(msg.chat.id, `Установил напоминание: через ${time} ${unit} нужно ${task}`);
-      setTimeout(() => bot.sendMessage(msg.chat.id, `${time} ${unit} прошло, пора ${task}`), Number(value) * 1000);
+      setTimeout(() => bot.sendMessage(msg.chat.id, `${time} ${unit} прошло, пора ${task}`), value);
     };
     switch (unit) {
       case 'секунд':
       case 'секунда':
       case 'секунды':
       case 'секунду':
-        reminder(time);
+        reminder(time * 1000);
         break;
       case 'минут':
       case 'минута':
       case 'минуты':
       case 'минуту':
-        reminder(time * 60);
+        reminder(time * 60000);
         break;
       case 'час':
       case 'часов':
       case 'часа':
-        reminder(time * 3600);
+        reminder(time * 3600000);
         break;
       default:
         bot.sendMessage(msg.chat.id, 'Некорректно указаны единицы времени');
